@@ -1,4 +1,4 @@
-import { createStitches } from "@stitches/react";
+import { createStitches } from '@stitches/react';
 
 export const {
   config,
@@ -28,6 +28,6 @@ export const {
       lg: '1.25rem',
       xl: '1.5rem',
       '2xl': '2rem',
-    }
-  }
-})
+    },
+  },
+});
