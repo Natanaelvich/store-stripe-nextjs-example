@@ -12,7 +12,8 @@
     "@stitches/react": "^1.2.8",
     "next": "^13.3.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "keen-slider": "^6.7.0"
   },
   "devDependencies": {
     "@types/node": "^18.7.13",
