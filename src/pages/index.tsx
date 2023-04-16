@@ -34,6 +34,7 @@ export default function Home({ products }: HomeProps) {
         <title>Home | Ignite Shop</title>
       </Head>
 
+      {/* // TODO: add laytou on products list empty */}
       <HomeContainer ref={sliderRef} className="keen-slider">
         {products.map(product => {
           return (

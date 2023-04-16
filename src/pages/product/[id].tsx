@@ -36,6 +36,7 @@ export default function Product({ product }: ProductProps) {
         />
 
         <TitleNotFound>Produto não encontrado</TitleNotFound>
+        {/* // TODO: add a link to home page */}
         <DescriptionNotFound>
           Desculpe, o produto que você estava procurando não foi encontrado.
           Verifique se o nome do produto está correto ou tente pesquisar

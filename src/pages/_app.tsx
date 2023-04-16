@@ -9,6 +9,7 @@ globalStyles();
 function App({ Component, pageProps }: AppProps) {
   return (
     <Container>
+      {/* // TODO: link to home page */}
       <Header>
         <Image src={logoImg} alt="" />
       </Header>
