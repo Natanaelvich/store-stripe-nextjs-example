@@ -4,10 +4,14 @@ import {
   ImageContainer,
   ProductContainer,
   ProductDetails,
+  ContainerNotFound,
+  DescriptionNotFound,
+  TitleNotFound,
 } from '../../styles/pages/product';
 import Image from 'next/image';
 import { stripe } from '../../lib/stripe';
 import Stripe from 'stripe';
+import productNotFoundImage from '../../assets/product-not-found.svg';
 
 interface ProductProps {
   product: {
@@ -21,6 +25,27 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
+  if (!product) {
+    return (
+      <ContainerNotFound>
+        <Image
+          src={productNotFoundImage}
+          width={300}
+          height={300}
+          alt="product not found"
+        />
+
+        <TitleNotFound>Produto não encontrado</TitleNotFound>
+        <DescriptionNotFound>
+          Desculpe, o produto que você estava procurando não foi encontrado.
+          Verifique se o nome do produto está correto ou tente pesquisar
+          novamente mais tarde. Se você precisar de ajuda, entre em contato
+          conosco para obter assistência
+        </DescriptionNotFound>
+      </ContainerNotFound>
+    );
+  }
+
   return (
     <>
       <Head>
