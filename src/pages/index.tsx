@@ -7,6 +7,9 @@ import { HomeContainer, Product } from '../styles/pages/home';
 
 import 'keen-slider/keen-slider.min.css';
 import Image from 'next/image';
+import { GetStaticProps } from 'next';
+import { stripe } from '../lib/stripe';
+import Stripe from 'stripe';
 
 interface HomeProps {
   products: {
@@ -17,46 +20,13 @@ interface HomeProps {
   }[];
 }
 
-export default function Home() {
+export default function Home({ products }: HomeProps) {
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
       spacing: 48,
     },
   });
-
-  const products: HomeProps['products'] = [
-    {
-      id: '1',
-      name: 'Product 1',
-      imageUrl: 'https://pbs.twimg.com/media/FW17vYJX0AApSN8?format=jpg',
-      price: '$10.99',
-    },
-    {
-      id: '2',
-      name: 'Product 2',
-      imageUrl: 'https://pbs.twimg.com/media/FW17vYJX0AApSN8?format=jpg',
-      price: '$19.99',
-    },
-    {
-      id: '3',
-      name: 'Product 3',
-      imageUrl: 'https://pbs.twimg.com/media/FW17vYJX0AApSN8?format=jpg',
-      price: '$5.99',
-    },
-    {
-      id: '4',
-      name: 'Product 4',
-      imageUrl: 'https://pbs.twimg.com/media/FW17vYJX0AApSN8?format=jpg',
-      price: '$14.99',
-    },
-    {
-      id: '5',
-      name: 'Product 5',
-      imageUrl: 'https://pbs.twimg.com/media/FW17vYJX0AApSN8?format=jpg',
-      price: '$24.99',
-    },
-  ];
 
   return (
     <>
@@ -87,3 +57,30 @@ export default function Home() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await stripe.products.list({
+    expand: ['data.default_price'],
+  });
+
+  const products = response.data.map(product => {
+    const price = product.default_price as Stripe.Price;
+
+    return {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+      price: new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(price.unit_amount / 100),
+    };
+  });
+
+  return {
+    props: {
+      products,
+    },
+    revalidate: 60 * 60 * 2, // 2 hours,
+  };
+};
