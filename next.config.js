@@ -2,7 +2,7 @@ module.exports = {
     images: {
       remotePatterns: [
         {
-          hostname: 'pbs.twimg.com',
+          hostname: 'files.stripe.com',
         },
       ],
     },
