@@ -6,6 +6,8 @@ import {
   ProductDetails,
 } from '../../styles/pages/product';
 import Image from 'next/image';
+import { stripe } from '../../lib/stripe';
+import Stripe from 'stripe';
 
 interface ProductProps {
   product: {
@@ -45,7 +47,7 @@ export default function Product({ product }: ProductProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [{ params: { id: '1' } }],
+    paths: [],
     fallback: 'blocking',
   };
 };
@@ -54,19 +56,36 @@ export const getStaticProps: GetStaticProps<
   ProductProps,
   { id: string }
 > = async ({ params }) => {
-  const productId = params.id;
+  try {
+    const productId = params.id;
 
-  return {
-    props: {
-      product: {
-        id: productId,
-        name: 'Product 1',
-        imageUrl: 'https://pbs.twimg.com/media/FW17vYJX0AApSN8?format=jpg',
-        price: '$10.99',
-        description: 'This is the description for product 1.',
-        defaultPriceId: '1',
+    const product = await stripe.products.retrieve(productId, {
+      expand: ['default_price'],
+    });
+
+    const price = product.default_price as Stripe.Price;
+
+    return {
+      props: {
+        product: {
+          id: product.id,
+          name: product.name,
+          imageUrl: product.images[0],
+          price: new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(price.unit_amount / 100),
+          description: product.description,
+          defaultPriceId: price.id,
+        },
       },
-    },
-    revalidate: 60 * 60 * 1, // 1 hours
-  };
+      revalidate: 60 * 60 * 1, // 1 hours
+    };
+  } catch (error) {
+    return {
+      props: {
+        product: null,
+      },
+    };
+  }
 };
