@@ -71,3 +71,27 @@ export const ProductDetails = styled('div', {
     },
   },
 });
+
+export const ContainerNotFound = styled('div', {
+  display: 'flex',
+  flex: 1,
+  width: '100%',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '$lg',
+});
+
+export const TitleNotFound = styled('h1', {
+  fontSize: '$xl',
+  fontWeight: 'bold',
+  marginBottom: '1rem',
+  marginTop: '1rem',
+});
+
+export const DescriptionNotFound = styled('p', {
+  fontSize: '$md',
+  color: '$gray300',
+  textAlign: 'center',
+  maxWidth: '500px',
+});
