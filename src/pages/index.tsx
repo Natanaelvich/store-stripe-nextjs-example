@@ -3,14 +3,20 @@ import Link from 'next/link';
 
 import { useKeenSlider } from 'keen-slider/react';
 
-import { HomeContainer, Product } from '../styles/pages/home';
+import {
+  HomeContainer,
+  Product,
+  ContainerNotFound,
+  TitleNotFound,
+  DescriptionNotFound,
+} from '../styles/pages/home';
 
 import 'keen-slider/keen-slider.min.css';
 import Image from 'next/image';
 import { GetStaticProps } from 'next';
 import { stripe } from '../lib/stripe';
 import Stripe from 'stripe';
-
+import warningIcon from '../assets/warning.svg';
 interface HomeProps {
   products: {
     id: string;
@@ -34,27 +40,47 @@ export default function Home({ products }: HomeProps) {
         <title>Home | Ignite Shop</title>
       </Head>
 
-      {/* // TODO: add laytou on products list empty */}
-      <HomeContainer ref={sliderRef} className="keen-slider">
-        {products.map(product => {
-          return (
-            <Link
-              href={`/product/${product.id}`}
-              key={product.id}
-              prefetch={false}
-            >
-              <Product className="keen-slider__slide">
-                <Image src={product.imageUrl} width={520} height={480} alt="" />
+      {products.length === 0 ? (
+        <ContainerNotFound>
+          <Image
+            src={warningIcon}
+            width={300}
+            height={300}
+            alt="product not found"
+          />
 
-                <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
-                </footer>
-              </Product>
-            </Link>
-          );
-        })}
-      </HomeContainer>
+          <TitleNotFound>Ops, não encontramos nenhum produto</TitleNotFound>
+          <DescriptionNotFound>
+            Por favor, tente novamente mais tarde
+          </DescriptionNotFound>
+        </ContainerNotFound>
+      ) : (
+        <HomeContainer ref={sliderRef} className="keen-slider">
+          {products.map(product => {
+            return (
+              <Link
+                href={`/product/${product.id}`}
+                key={product.id}
+                prefetch={false}
+              >
+                <Product className="keen-slider__slide">
+                  <Image
+                    src={product.imageUrl}
+                    width={520}
+                    height={480}
+                    alt=""
+                  />
+
+                  <footer>
+                    <strong>{product.name}</strong>
+                    <span>{product.price}</span>
+                  </footer>
+                </Product>
+              </Link>
+            );
+          })}
+        </HomeContainer>
+      )}
     </>
   );
 }
