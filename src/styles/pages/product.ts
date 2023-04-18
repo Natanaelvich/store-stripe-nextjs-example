@@ -94,4 +94,5 @@ export const DescriptionNotFound = styled('p', {
   color: '$gray300',
   textAlign: 'center',
   maxWidth: '500px',
+  marginBottom: '1rem',
 });
