@@ -20,3 +20,7 @@ Store Stripe Nextjs Example is a project that aims to demonstrate the implementa
 - SPA concepts
 - Server-side rendering (SSR)
 - Static-site generation (SSG)
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
