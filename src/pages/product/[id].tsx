@@ -13,6 +13,8 @@ import { stripe } from '../../lib/stripe';
 import Stripe from 'stripe';
 import warningIcon from '../../assets/warning.svg';
 import Link from 'next/link';
+import axios from 'axios';
+import { useState } from 'react';
 
 interface ProductProps {
   product: {
@@ -26,6 +28,28 @@ interface ProductProps {
 }
 
 export default function Product({ product }: ProductProps) {
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
+
+  async function handleBuyButton() {
+    try {
+      setIsCreatingCheckoutSession(true);
+
+      const response = await axios.post('/api/checkout', {
+        priceId: product.defaultPriceId,
+      });
+
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      console.log('sim', err);
+      setIsCreatingCheckoutSession(false);
+
+      alert('Falha ao redirecionar ao checkout!');
+    }
+  }
+
   if (!product) {
     return (
       <ContainerNotFound>
@@ -65,7 +89,12 @@ export default function Product({ product }: ProductProps) {
 
           <p>{product.description}</p>
 
-          <button>Comprar agora</button>
+          <button
+            disabled={isCreatingCheckoutSession}
+            onClick={handleBuyButton}
+          >
+            Comprar agora
+          </button>
         </ProductDetails>
       </ProductContainer>
     </>
